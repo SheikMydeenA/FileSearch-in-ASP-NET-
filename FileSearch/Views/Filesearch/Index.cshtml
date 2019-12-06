@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<h2>Index</h2>
+<html>
+<head>
+    <title>File Search</title>
+</head>
+<body>
+    <form id="form1">
+        <div>
+            Folder Name <input type="text" ID="FolderName" name="FolderName" />
+            
+            Enter  file to be searched:<input type="text" ID="Filename" name="Filename" />
+            <br />
+           
+           <input type="button" id="btnSubmit" value="Search" name="btnSubmit"/>
+        </div>
+        <div id="popupList"></div>
+    </form>
+</body>
+</html>
+<script>
+    
+    $("#btnSubmit").click(function () {
+        var folderName = $("#FolderName").val()
+        var filename = $("#Filename").val()
+        var obj = {
+            FolderName: folderName,
+            Filename: filename
+        }
+      
+        $.ajax({
+            url: '@Url.Action("FilesList", "FileSearch")',           
+            type: 'POST',
+            data: obj,
+            success: function (response) {
+
+                $('#popupList').empty();
+                if (response.length > 0) {
+                    var result = response.split(",");
+                    for (i = 0; i < result.length; i++) {
+                        $("#popupList").append('<li>' + result[i] + '</li>');
+
+                    }
+                }
+                else {
+                    $("#popupList").append('File does not exist');
+                }
+                console.log(result)
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    });
+
+        
+   
+</script>
